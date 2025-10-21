@@ -1,0 +1,292 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {}
+}<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محول النص إلى تطبيقات - (نسخة مدعومة بالإعلانات)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* تخصيص بسيط للألوان الأساسية */
+        :root {
+            --primary-color: #ef4444; /* Red 500 */
+        }
+        .ad-slot {
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fef3c7; /* Amber 100 */
+            border: 2px dashed #f59e0b; /* Amber 500 */
+            color: #b45309; /* Amber 800 */
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 1rem;
+        }
+        .ad-slot:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <!-- Sticky Bottom Ad Slot (Ad Slot 4) - High Visibility -->
+    <div id="ad-footer" class="fixed bottom-0 left-0 right-0 bg-white border-t border-red-500 shadow-2xl z-50 p-1">
+        <div class="max-w-7xl mx-auto ad-slot h-16 text-sm" onclick="clickAd('Footer')">
+            إعلان مدفوع ضخم (728x90) - انقر هنا لدعم خدماتنا
+        </div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="max-w-7xl mx-auto p-4 md:p-8 mb-20">
+
+        <!-- Header Ad Slot (Ad Slot 1) - Banner -->
+        <div id="ad-header" class="ad-slot h-24 mb-6" onclick="clickAd('Header')">
+            إعلان بانر (970x250) - مساحة إعلانية مميزة!
+        </div>
+
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-red-600">مولد التطبيقات بالنص</h1>
+            <p class="text-gray-600 mt-2 text-lg">حول أفكارك إلى كود جاهز (بدعم من إعلاناتكم).</p>
+        </header>
+
+        <!-- Main Layout: Content + Sidebar Ad -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+            <!-- Primary Application Area (3/4 width on desktop) -->
+            <main class="lg:col-span-3">
+                <section class="bg-white shadow-xl rounded-lg p-6 mb-8 border-t-4 border-red-500">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">وصف التطبيق المطلوب</h2>
+                    <textarea id="app-description" rows="8" placeholder="مثال: أريد تطبيق قائمة مهام بسيط بلغة JavaScript، بخلفية زرقاء فاتحة وزر لإضافة المهام."
+                        class="w-full p-4 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition duration-150 text-gray-700"></textarea>
+
+                    <div class="flex items-center justify-between mt-4">
+                        <button id="generate-button" onclick="generateApp()"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 shadow-md flex items-center disabled:opacity-50">
+                            <span id="button-text">توليد التطبيق الآن</span>
+                            <div id="loading-indicator" class="loading-spinner hidden mr-2"></div>
+                        </button>
+                        <p class="text-sm text-gray-500">مدة التوليد: 10 - 25 ثانية (يرجى مشاهدة الإعلانات).</p>
+                    </div>
+                </section>
+
+                <!-- Inline Ad Slot (Ad Slot 3) - Interruptive -->
+                <div id="ad-inline" class="ad-slot h-32 my-8" onclick="clickAd('Inline')">
+                    إعلان تفاعلي (300x250) - قد يظهر كفيديو!
+                </div>
+
+
+                <!-- Output Section -->
+                <section class="bg-gray-800 shadow-xl rounded-lg p-6">
+                    <h2 class="text-2xl font-semibold mb-4 text-white">الكود المُولَّد</h2>
+                    <div id="output-code" class="bg-black p-4 rounded-lg overflow-x-auto text-sm text-green-300 min-h-[300px] border border-gray-700">
+                        <!-- Code output will be displayed here -->
+                        <p class="text-gray-400">سيظهر الكود الخاص بتطبيقك هنا بعد عملية التوليد.</p>
+                    </div>
+                    <button onclick="copyCode()" class="mt-4 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition duration-300 text-sm">
+                        نسخ الكود
+                    </button>
+                    <div id="copy-message" class="mt-2 text-sm text-green-400 hidden">تم النسخ بنجاح!</div>
+                </section>
+
+            </main>
+
+            <!-- Sidebar Ad Slot (Ad Slot 2) - Fixed width -->
+            <aside class="lg:col-span-1">
+                <div class="sticky top-4">
+                    <div id="ad-sidebar-1" class="ad-slot h-[600px] w-full mb-6" onclick="clickAd('Sidebar 1')">
+                        إعلان عمودي (300x600) - يرجى الضغط عليه مرة واحدة على الأقل.
+                    </div>
+                    <div id="ad-sidebar-2" class="ad-slot h-48 w-full" onclick="clickAd('Sidebar 2')">
+                        إعلان مربع (300x250)
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+    </div>
+
+    <script>
+        const descriptionInput = document.getElementById('app-description');
+        const outputCode = document.getElementById('output-code');
+        const generateButton = document.getElementById('generate-button');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const buttonText = document.getElementById('button-text');
+        const copyMessage = document.getElementById('copy-message');
+
+        let isGenerating = false;
+
+        // --- Ad Management ---
+
+        function clickAd(slotId) {
+            alert(`تم تسجيل نقرة إعلان ناجحة في فتحة: ${slotId}. شكراً لدعمك!`);
+            // Here you would typically send an impression/click event to the ad server
+        }
+
+        // --- Simulated Text-to-App Logic ---
+
+        function simulateGeneration(prompt) {
+            const lowerPrompt = prompt.toLowerCase();
+            let codeBlock;
+
+            if (lowerPrompt.includes('لعبة') || lowerPrompt.includes('game')) {
+                codeBlock = `
+// Simulated Game Code (HTML/JS)
+<canvas id="gameCanvas" width="800" height="600" style="background: #222;"></canvas>
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    let player = { x: 50, y: 50, size: 20, color: 'red' };
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.size, player.size);
+        requestAnimationFrame(draw);
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') player.x += 5;
+        // ... (requires full game logic)
+    });
+    draw();
+</script>
+                `;
+            } else if (lowerPrompt.includes('حاسبة') || lowerPrompt.includes('calculator')) {
+                codeBlock = `
+// Simulated Calculator Code (HTML/CSS/JS)
+<div style="width: 200px; padding: 10px; border: 1px solid #ccc;">
+    <input type="text" id="display" value="0" style="width: 100%; margin-bottom: 10px;">
+    <button onclick="appendNum(7)">7</button>
+    <button onclick="operate('+')">+</button>
+    <!-- ... More buttons -->
+</div>
+<script>
+    let currentInput = '';
+    function appendNum(num) {
+        currentInput += num;
+        document.getElementById('display').value = currentInput;
+    }
+    // ... (requires full calculator logic)
+</script>
+                `;
+            } else if (lowerPrompt.includes('قائمة مهام') || lowerPrompt.includes('todo')) {
+                 codeBlock = `
+// Simulated To-Do List App (Tailwind CSS included)
+<div class="max-w-md mx-auto p-4 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-bold text-blue-600 mb-4">قائمة المهام</h2>
+    <input id="task-input" type="text" class="w-full p-2 border rounded mb-4" placeholder="أدخل مهمة جديدة...">
+    <ul id="task-list">
+        <!-- Tasks will be injected here -->
+    </ul>
+    <script>
+        const input = document.getElementById('task-input');
+        const list = document.getElementById('task-list');
+
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && input.value.trim() !== '') {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center p-2 border-b';
+                li.innerHTML = input.value + '<button class="text-red-500 hover:text-red-700">حذف</button>';
+                list.appendChild(li);
+                input.value = '';
+            }
+        });
+    </script>
+</div>
+                `;
+            } else {
+                codeBlock = `
+// Generic Application Boilerplate Code (HTML Structure)
+// بناءً على الوصف التالي: ${prompt.slice(0, 100)}...
+// ----------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <title>تطبيق افتراضي</title>
+    <style>body { font-family: Arial; text-align: center; padding: 50px; }</style>
+</head>
+<body>
+    <h1>مرحباً بك في تطبيقك الجديد!</h1>
+    <p>هذا كود هيكلي. للوصول إلى الوظائف المتقدمة، يرجى التفاعل مع الإعلانات لدعم خوارزميات الذكاء الاصطناعي.</p>
+</body>
+</html>
+                `;
+            }
+
+            // Clean up code block for pre formatting
+            return codeBlock.trim();
+        }
+
+        async function generateApp() {
+            if (isGenerating) return;
+
+            const prompt = descriptionInput.value.trim();
+            if (!prompt) {
+                alert('الرجاء إدخال وصف لتطبيقك.');
+                return;
+            }
+
+            isGenerating = true;
+            generateButton.disabled = true;
+            buttonText.textContent = 'جاري التوليد...';
+            loadingIndicator.classList.remove('hidden');
+            outputCode.innerHTML = `<div class="text-center text-gray-400 py-10">
+                <div class="loading-spinner mx-auto mb-4"></div>
+                <p>يتم تحليل النص واختيار أفضل شريك إعلاني...</p>
+            </div>`;
+            copyMessage.classList.add('hidden');
+
+            // Simulate Network Delay (Crucial time for ad display)
+            const delay = Math.floor(Math.random() * 10000) + 5000; // 5 to 15 seconds delay
+            await new Promise(resolve => setTimeout(resolve, delay));
+
+            // Generate simulated code
+            const generatedCode = simulateGeneration(prompt);
+
+            // Display the result
+            outputCode.innerHTML = `<pre class="whitespace-pre-wrap">${escapeHTML(generatedCode)}</pre>`;
+
+            isGenerating = false;
+            generateButton.disabled = false;
+            buttonText.textContent = 'توليد التطبيق الآن';
+            loadingIndicator.classList.add('hidden');
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        function copyCode() {
+            const codeToCopy = outputCode.querySelector('pre') ? outputCode.querySelector('pre').innerText : '';
+            if (!codeToCopy) {
+                alert('لا يوجد كود للنسخ بعد.');
+                return;
+            }
+            navigator.clipboard.writeText(codeToCopy).then(() => {
+                copyMessage.classList.remove('hidden');
+                setTimeout(() => copyMessage.classList.add('hidden'), 3000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('فشل في عملية النسخ.');
+            });
+        }
+    </script>
+</body>
+</html>
